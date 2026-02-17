@@ -2,12 +2,12 @@
 // Author: Akash Sasikumar
 // Copyright: 2023.Akash sasikumar
 
-study(title="Chaikin Volatility")
-Length = input(10, minval=1)
-ROCLength = input(12, minval=1)
-hline(0, color=purple, linestyle=line)
+indicator(title="Chaikin Volatility", shorttitle="CV", format=format.price, precision=2, timeframe="", timeframe_gaps=true)
+Length = input.int(10, minval=1, title="Length")
+ROCLength = input.int(12, minval=1, title="ROC Length")
+hline(0, color=color.purple, linestyle=hline.style_solid)
 xPrice1 = high
 xPrice2 = low
 xPrice = xPrice1 - xPrice2
-xROC_EMA = roc(ema(xPrice, Length), ROCLength)
-plot(xROC_EMA, color=blue, title="Chaikin Volatility")
+xROC_EMA = ta.roc(ta.ema(xPrice, Length), ROCLength)
+plot(xROC_EMA, color=color.blue, title="Chaikin Volatility")

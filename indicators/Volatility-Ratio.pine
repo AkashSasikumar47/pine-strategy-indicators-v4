@@ -1,11 +1,11 @@
-//@version=3
+//@version=5
 // Author: Akash Sasikumar
 // Copyright: 2023.Akash sasikumar
 
-study("Volatility Ratio", shorttitle="VR")
+indicator("Volatility Ratio", shorttitle="VR", format=format.price, precision=2, timeframe="", timeframe_gaps=true)
 
-length = input(title="Length", type=integer, minval=1, defval=14)
-breakoutLevel = input(title="Breakout Level", type=float, minval=0, step=0.1, defval=0.5)
+length = input.int(14, title="Length", minval=1)
+breakoutLevel = input.float(0.5, title="Breakout Level", minval=0, step=0.1)
 
 _highest(length, start) =>
     out = nz(high[start])
@@ -21,16 +21,16 @@ _lowest(length, start) =>
         out := out > prev ? prev : out
     out
 
-max = max(_highest(length, 1), close[length + 1])
-min = min(_lowest(length, 1), close[length + 1])
+max = math.max(_highest(length, 1), close[length + 1])
+min = math.min(_lowest(length, 1), close[length + 1])
 
-vr = tr(true) / (max - min)
+vr = ta.tr(true) / (max - min)
 
-vrColor = vr >= breakoutLevel ? #ff9800 : #3c78d8
+vrColor = vr >= breakoutLevel ? color.new(#ff9800, 0) : color.new(#3c78d8, 0)
 
-plot(vr, title="VR", color=vrColor, transp=0)
+plot(vr, title="VR", color=vrColor)
 
-hline(breakoutLevel, title="Breakout Level", linestyle=dotted)
+hline(breakoutLevel, title="Breakout Level", linestyle=hline.style_dotted)
 
-breakoutFillColor = vr >= breakoutLevel ? #ff9800 : color(white, 100)
-bgcolor(breakoutFillColor, transp=90)
+breakoutFillColor = vr >= breakoutLevel ? color.new(#ff9800, 90) : color.new(color.white, 100)
+bgcolor(breakoutFillColor)

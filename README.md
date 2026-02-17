@@ -1,99 +1,107 @@
-<div>
-  <h1>💹 Volatility Indicators</h1>
-  <p>Welcome to the Volatility Indicators repository! These technical indicators are essential tools for traders and investors to analyze and understand market dynamics. They provide valuable insights into trend strength, market sentiment, and volatility, aiding in making informed trading decisions.</p>
-</div>
+# Pine Strategy Indicators v4
 
-## 📈 Indicators Included
+## Overview
 
-- 📊 Average Directional Index (ADX)
-- 📈 Volatility Index (VIX)
-- 📈 Keltner Channels
-- 📉 Chaikin Volatility
-- 🔄 Volatility Ratio
+A collection of volatility and trend analysis indicators for TradingView, implemented in Pine Script v5. These indicators provide quantitative measurements of market volatility, trend strength, and price momentum to support technical trading decisions.
 
-## 📋 Indicator Descriptions
+## Included Indicators
 
-### Average Directional Index (ADX) 📈
-![ADX Example](images/Average-Directional-Index.png)
+### Average Directional Index (ADX)
 
-The Average Directional Index (ADX) measures the strength of a trend's momentum. It helps traders identify the strength of a trend, making it a crucial tool for trend-following strategies.
+**Purpose:** Measures the strength of a trend regardless of direction.
 
-**Use Case:**
-ADX helps traders determine the strength of a trend, allowing them to focus on strong trends and avoid weak or sideways markets.
+**Core Logic:** Calculates the smoothed moving average of the difference between positive and negative directional indicators (DI+ and DI-) normalized by their sum. Values above 25 indicate strong trends, while values below 20 suggest weak or ranging markets.
 
-**How to Use:**
-To use the Average Directional Index (ADX) indicator, follow these steps:
-1. Calculate the ADX value based on the average of positive and negative directional movement indices (DMI) over a chosen period (e.g., 14).
-2. ADX values above 25 indicate a strengthening trend, while values below 20 suggest a weak trend or range-bound market.
-3. Use ADX in conjunction with other technical indicators to confirm trend strength.
+**Key Parameters:**
+- ADX Smoothing: 14 (smoothing period for ADX calculation)
+- DI Length: 14 (period for directional indicator calculation)
 
-### Volatility Index (VIX) 📊
-![VIX Example](images/Volatility-Ratio.png)
+![Average Directional Index](images/Average-Directional-Index.png)
 
-The Volatility Index (VIX) gauges market sentiment and volatility. It is often referred to as the "fear gauge" as it indicates the market's expectation of future volatility.
+**Typical Use Case:** Identifying trend strength to filter trade signals. Use in conjunction with directional indicators to confirm whether strong trends are bullish or bearish, avoiding trades in weak trend conditions.
 
-**Use Case:**
-VIX helps traders assess market sentiment and anticipate potential market movements during periods of high volatility.
+---
 
-**How to Use:**
-To use the Volatility Index (VIX) as an indicator, follow these steps:
-1. Monitor the VIX value regularly.
-2. Higher VIX values suggest increased market uncertainty and potential for larger price swings.
-3. Use VIX in conjunction with other market analysis tools to make informed trading decisions.
+### Keltner Channels
 
-### Keltner Channels 🧰
-![Keltner Channels Example](images/Keltner-Channels.png)
+**Purpose:** Volatility-based envelope indicator that defines price channels around a moving average.
 
-Keltner Channels are similar to Bollinger Bands but use the Average True Range (ATR) to set bands. They help traders identify potential breakouts and trend reversals.
+**Core Logic:** Plots three lines: a central exponential or simple moving average, and upper/lower bands set at a multiple of the Average True Range (ATR), True Range, or Range from the center line. Price movement outside the channels can signal breakouts or overbought/oversold conditions.
 
-**Use Case:**
-Keltner Channels can be used to confirm trend direction and identify potential breakout points.
+**Key Parameters:**
+- Length: 20 (moving average period)
+- Multiplier: 2.0 (band distance from center line)
+- Source: close (price source for calculation)
+- Use Exponential MA: true (EMA vs SMA toggle)
+- Bands Style: Average True Range (ATR/TR/Range selection)
+- ATR Length: 10 (ATR calculation period)
 
-**How to Use:**
-To use Keltner Channels as an indicator, follow these steps:
-1. Calculate the middle line using an exponential moving average (EMA) of the asset's price.
-2. Calculate the upper and lower bands based on the EMA and a multiplier (typically 1 to 2 times the ATR).
-3. Observe price interactions with the bands:
-   - Price crossing above the upper band may indicate a potential bullish breakout.
-   - Price crossing below the lower band may indicate a potential bearish breakout.
-4. Use Keltner Channels in conjunction with other indicators to confirm trade signals.
+![Keltner Channels](images/Keltner-Channels.png)
 
-### Chaikin Volatility 📉
-![Chaikin Volatility Example](images/Chaikin-Volatility.png)
+**Typical Use Case:** Identifying potential breakout points and trend continuation. Price touching or exceeding the upper band may indicate bullish momentum, while touching the lower band suggests bearish pressure. Works well in trending markets.
 
-Chaikin Volatility measures market volatility based on the spread between high and low prices. It assists traders in assessing the potential for price movements.
+---
 
-**Use Case:**
-Chaikin Volatility helps traders gauge the potential for price swings and adjust their trading strategies accordingly.
+### Relative Volatility Index (RVI)
 
-**How to Use:**
-To use Chaikin Volatility as an indicator, follow these steps:
-1. Calculate Chaikin Volatility using the difference between the highest high and lowest low over a specified period (e.g., 10).
-2. Higher Chaikin Volatility values suggest increased market volatility.
-3. Monitor Chaikin Volatility to identify potential trading opportunities during volatile market conditions.
+**Purpose:** Measures the direction of volatility using standard deviation of price changes.
 
-### Volatility Ratio 🔍
-![Volatility Ratio Example](images/Volatility-Ratio.png)
+**Core Logic:** Calculates separate exponential moving averages of standard deviation for upward and downward price changes, then expresses the result as a ratio ranging from 0-100. Readings above 50 indicate upward volatility dominance, while readings below 50 suggest downward volatility.
 
-The Volatility Ratio compares the Average True Range (ATR) to a moving average, aiding traders in identifying shifts in volatility.
+**Key Parameters:**
+- Length: 10 (standard deviation calculation period)
+- Offset: 0 (horizontal shift for plot)
+- MA Type: SMA (moving average type: SMA, EMA, WMA, VWMA, RMA, or Bollinger Bands)
+- MA Length: 14 (smoothing period for RVI)
+- BB StdDev: 2.0 (standard deviation multiplier for Bollinger Bands option)
 
-**Use Case:**
-The Volatility Ratio helps traders detect changes in market volatility, which can be useful for adjusting risk management strategies.
+![Relative Volatility Index](images/Relative-Volatility-Index.png)
 
-**How to Use:**
-To use the Volatility Ratio as an indicator, follow these steps:
-1. Calculate the ATR over a specified period (e.g., 14).
-2. Calculate a moving average (e.g., simple moving average) of the ATR over another specified period (e.g., 20).
-3. Compare the ATR to the moving average to determine whether volatility is increasing or decreasing.
-4. Use the Volatility Ratio to adapt your trading strategy to current market conditions.
+**Typical Use Case:** Confirming trend direction and identifying divergences. RVI above 50 with rising price confirms bullish momentum, while RVI below 50 with falling price confirms bearish momentum. Divergences between RVI and price can signal potential reversals.
 
-## 🚀 Usage and Instructions
+---
 
-To use these indicators:
-1. Open the TradingView Pine Script editor.
-2. Copy the Pine Script code of the desired indicator from this repository.
-3. Paste the code in the Pine Script editor.
-4. Customize the indicator's parameters as needed.
-5. Apply the indicator to your chart to visualize its signals.
+### Chaikin Volatility
 
-Feel free to explore, modify, and integrate these indicators into your trading strategies. Happy trading!
+**Purpose:** Quantifies the rate of change of volatility based on the trading range.
+
+**Core Logic:** Calculates the exponential moving average of the high-low spread, then measures the rate of change of this EMA over a specified period. Rising values indicate expanding volatility, while falling values suggest contracting volatility.
+
+**Key Parameters:**
+- Length: 10 (EMA period for high-low spread)
+- ROC Length: 12 (rate of change lookback period)
+
+![Chaikin Volatility](images/Chaikin-Volatility.png)
+
+**Typical Use Case:** Anticipating breakouts and trend changes. Increasing Chaikin Volatility often precedes significant price movements, while decreasing volatility suggests consolidation. Spikes above zero can signal the start of trending moves.
+
+---
+
+### Volatility Ratio
+
+**Purpose:** Compares current true range to recent price range to identify volatility expansion or contraction.
+
+**Core Logic:** Divides the current true range by the difference between the highest high and lowest low over a lookback period (including a historical close). Values above the breakout level indicate elevated volatility relative to recent range.
+
+**Key Parameters:**
+- Length: 14 (lookback period for high/low range)
+- Breakout Level: 0.5 (threshold for volatility expansion)
+
+![Volatility Ratio](images/Volatility-Ratio.png)
+
+**Typical Use Case:** Detecting volatility breakouts from consolidation periods. Values exceeding the breakout level suggest the market is breaking out of its recent range, potentially signaling the start of a new trend or increased price movement.
+
+---
+
+## How to Use
+
+1. Open TradingView and navigate to the Pine Editor
+2. Copy the desired indicator code from the `indicators/` folder in this repository
+3. Paste the code into the Pine Editor
+4. Click "Add to Chart" to apply the indicator
+5. Adjust parameters in the indicator settings panel as needed
+6. Combine multiple indicators for confirmation of trading signals
+
+## Disclaimer
+
+These indicators are provided for educational and informational purposes only. They are technical analysis tools and should not be used as the sole basis for trading decisions. Past performance does not guarantee future results. Always conduct thorough analysis and consider your risk tolerance before trading.

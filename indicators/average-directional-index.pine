@@ -1,0 +1,21 @@
+//@version=6
+indicator("Average Directional Index", "ADX", overlay = false, format = format.price, precision = 2, timeframe = "", timeframe_gaps = true)
+
+adxLength = input.int(14, "ADX Smoothing", minval = 1)
+diLength = input.int(14, "DI Length", minval = 1)
+
+directionalMovement(length) =>
+    up = ta.change(high)
+    down = -ta.change(low)
+    plusDM = na(up) ? na : (up > down and up > 0 ? up : 0)
+    minusDM = na(down) ? na : (down > up and down > 0 ? down : 0)
+    trueRange = ta.rma(ta.tr, length)
+    plus = fixnan(100 * ta.rma(plusDM, length) / trueRange)
+    minus = fixnan(100 * ta.rma(minusDM, length) / trueRange)
+    [plus, minus]
+
+[plus, minus] = directionalMovement(diLength)
+total = plus + minus
+adx = 100 * ta.rma(math.abs(plus - minus) / (total == 0 ? 1 : total), adxLength)
+
+plot(adx, "ADX", color.red)

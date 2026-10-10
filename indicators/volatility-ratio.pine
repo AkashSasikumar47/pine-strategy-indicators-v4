@@ -1,0 +1,26 @@
+//@version=6
+indicator("Volatility Ratio", "VR", overlay = false, format = format.price, precision = 2, timeframe = "", timeframe_gaps = true)
+
+length = input.int(14, "Length", minval = 1)
+breakoutLevel = input.float(0.5, "Breakout Level", minval = 0, step = 0.1)
+
+highestFrom(length, start) =>
+    result = nz(high[start])
+    for i = start + 1 to length - 1
+        result := math.max(result, nz(high[i]))
+    result
+
+lowestFrom(length, start) =>
+    result = nz(low[start])
+    for i = start + 1 to length - 1
+        result := math.min(result, nz(low[i]))
+    result
+
+rangeHigh = math.max(highestFrom(length, 1), close[length + 1])
+rangeLow = math.min(lowestFrom(length, 1), close[length + 1])
+vr = ta.tr(true) / (rangeHigh - rangeLow)
+isBreakout = vr >= breakoutLevel
+
+plot(vr, "VR", isBreakout ? #ff9800 : #3c78d8)
+hline(breakoutLevel, "Breakout Level", linestyle = hline.style_dotted)
+bgcolor(isBreakout ? color.new(#ff9800, 90) : na)

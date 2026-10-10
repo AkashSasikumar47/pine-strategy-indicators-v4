@@ -1,0 +1,10 @@
+//@version=6
+indicator("Chaikin Volatility", "CV", overlay = false, format = format.price, precision = 2, timeframe = "", timeframe_gaps = true)
+
+length = input.int(10, "Length", minval = 1)
+rocLength = input.int(12, "ROC Length", minval = 1)
+
+chaikinVolatility = ta.roc(ta.ema(high - low, length), rocLength)
+
+hline(0, "Zero Line", color.purple, hline.style_solid)
+plot(chaikinVolatility, "Chaikin Volatility", color.blue)

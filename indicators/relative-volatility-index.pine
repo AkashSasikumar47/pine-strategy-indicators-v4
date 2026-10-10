@@ -1,0 +1,36 @@
+//@version=6
+indicator("Relative Volatility Index", "RVI", overlay = false, format = format.price, precision = 2, timeframe = "", timeframe_gaps = true)
+
+length = input.int(10, "Length", minval = 1)
+offset = input.int(0, "Offset", minval = -500, maxval = 500)
+maType = input.string("SMA", "MA Type", options = ["SMA", "Bollinger Bands", "EMA", "SMMA (RMA)", "WMA", "VWMA"], group = "MA Settings")
+maLength = input.int(14, "MA Length", minval = 1, group = "MA Settings")
+bbMultiplier = input.float(2.0, "BB StdDev", minval = 0.001, maxval = 50, group = "MA Settings")
+
+movingAverage(values, length, maType) =>
+    switch maType
+        "SMA" => [ta.sma(values, length), float(na), float(na)]
+        "Bollinger Bands" =>
+            [middle, upper, lower] = ta.bb(values, length, bbMultiplier)
+            [middle, upper, lower]
+        "EMA" => [ta.ema(values, length), float(na), float(na)]
+        "SMMA (RMA)" => [ta.rma(values, length), float(na), float(na)]
+        "WMA" => [ta.wma(values, length), float(na), float(na)]
+        "VWMA" => [ta.vwma(values, length), float(na), float(na)]
+
+deviation = ta.stdev(close, length)
+upward = ta.ema(ta.change(close) <= 0 ? 0 : deviation, 14)
+downward = ta.ema(ta.change(close) > 0 ? 0 : deviation, 14)
+rvi = upward / (upward + downward) * 100
+
+[rviMa, bbUpper, bbLower] = movingAverage(rvi, maLength, maType)
+
+upperBand = hline(80, "Upper Band", #787B86)
+hline(50, "Middle Band", color.new(#787B86, 50))
+lowerBand = hline(20, "Lower Band", #787B86)
+fill(upperBand, lowerBand, color.rgb(126, 87, 194, 90), "Background")
+plot(rvi, "RVI", #7E57C2, offset = offset)
+plot(rviMa, "RVI-based MA", color.yellow, offset = offset)
+bbUpperPlot = plot(bbUpper, "Upper Bollinger Band", color.green)
+bbLowerPlot = plot(bbLower, "Lower Bollinger Band", color.green)
+fill(bbUpperPlot, bbLowerPlot, color.new(color.green, 90), "Bollinger Bands Background Fill")

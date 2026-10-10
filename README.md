@@ -1,107 +1,98 @@
 # Pine Strategy Indicators v4
 
-## Overview
+Five open-source TradingView indicators written in Pine Script v6: Average Directional Index, Chaikin Volatility, Keltner Channels, Relative Volatility Index and Volatility Ratio. Part of [GAINZ](https://gainz-trading-indicators.vercel.app), 35 indicators across seven collections.
 
-A collection of volatility and trend analysis indicators for TradingView, implemented in Pine Script v5. These indicators provide quantitative measurements of market volatility, trend strength, and price momentum to support technical trading decisions.
+| Indicator                                               | Type       | Script                                                                        |
+| ------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------- |
+| [Average Directional Index](#average-directional-index) | Trend      | [`average-directional-index.pine`](indicators/average-directional-index.pine) |
+| [Chaikin Volatility](#chaikin-volatility)               | Volatility | [`chaikin-volatility.pine`](indicators/chaikin-volatility.pine)               |
+| [Keltner Channels](#keltner-channels)                   | Volatility | [`keltner-channels.pine`](indicators/keltner-channels.pine)                   |
+| [Relative Volatility Index](#relative-volatility-index) | Volatility | [`relative-volatility-index.pine`](indicators/relative-volatility-index.pine) |
+| [Volatility Ratio](#volatility-ratio)                   | Volatility | [`volatility-ratio.pine`](indicators/volatility-ratio.pine)                   |
 
-## Included Indicators
+## Average Directional Index
 
-### Average Directional Index (ADX)
+![Average Directional Index](images/average-directional-index.png)
 
-**Purpose:** Measures the strength of a trend regardless of direction.
+Measures how strong a trend is, whichever way it's heading, on a scale from 0 to 100.
 
-**Core Logic:** Calculates the smoothed moving average of the difference between positive and negative directional indicators (DI+ and DI-) normalized by their sum. Values above 25 indicate strong trends, while values below 20 suggest weak or ranging markets.
+Below 20 the market is drifting; above 25 a trend has real strength. A rising ADX means the trend is gaining force.
 
-**Key Parameters:**
-- ADX Smoothing: 14 (smoothing period for ADX calculation)
-- DI Length: 14 (period for directional indicator calculation)
+| Setting       | Default |
+| ------------- | ------- |
+| ADX smoothing | 14      |
+| DI length     | 14      |
 
-![Average Directional Index](images/Average-Directional-Index.png)
+Based on TradingView's built-in Average Directional Index indicator.
 
-**Typical Use Case:** Identifying trend strength to filter trade signals. Use in conjunction with directional indicators to confirm whether strong trends are bullish or bearish, avoiding trades in weak trend conditions.
+## Chaikin Volatility
 
----
+![Chaikin Volatility](images/chaikin-volatility.png)
 
-### Keltner Channels
+The rate of change of an average of each bar's high–low range.
 
-**Purpose:** Volatility-based envelope indicator that defines price channels around a moving average.
+A sharp rise means ranges are widening fast, often near panicky tops and bottoms. A falling line means the market is calming down.
 
-**Core Logic:** Plots three lines: a central exponential or simple moving average, and upper/lower bands set at a multiple of the Average True Range (ATR), True Range, or Range from the center line. Price movement outside the channels can signal breakouts or overbought/oversold conditions.
+| Setting    | Default |
+| ---------- | ------- |
+| Length     | 10      |
+| ROC length | 12      |
 
-**Key Parameters:**
-- Length: 20 (moving average period)
-- Multiplier: 2.0 (band distance from center line)
-- Source: close (price source for calculation)
-- Use Exponential MA: true (EMA vs SMA toggle)
-- Bands Style: Average True Range (ATR/TR/Range selection)
-- ATR Length: 10 (ATR calculation period)
+## Keltner Channels
 
-![Keltner Channels](images/Keltner-Channels.png)
+![Keltner Channels](images/keltner-channels.png)
 
-**Typical Use Case:** Identifying potential breakout points and trend continuation. Price touching or exceeding the upper band may indicate bullish momentum, while touching the lower band suggests bearish pressure. Works well in trending markets.
+A 20-bar EMA with bands set two ATRs above and below it, the space between them shaded.
 
----
+Closes outside the channel signal a strong push. Inside it, the middle line works like a magnet.
 
-### Relative Volatility Index (RVI)
+| Setting    | Default |
+| ---------- | ------- |
+| Length     | 20      |
+| Multiplier | 2.0     |
+| ATR length | 10      |
+| Average    | EMA     |
 
-**Purpose:** Measures the direction of volatility using standard deviation of price changes.
+Based on TradingView's built-in Keltner Channels indicator.
 
-**Core Logic:** Calculates separate exponential moving averages of standard deviation for upward and downward price changes, then expresses the result as a ratio ranging from 0-100. Readings above 50 indicate upward volatility dominance, while readings below 50 suggest downward volatility.
+## Relative Volatility Index
 
-**Key Parameters:**
-- Length: 10 (standard deviation calculation period)
-- Offset: 0 (horizontal shift for plot)
-- MA Type: SMA (moving average type: SMA, EMA, WMA, VWMA, RMA, or Bollinger Bands)
-- MA Length: 14 (smoothing period for RVI)
-- BB StdDev: 2.0 (standard deviation multiplier for Bollinger Bands option)
+![Relative Volatility Index](images/relative-volatility-index.png)
 
-![Relative Volatility Index](images/Relative-Volatility-Index.png)
+RSI's logic applied to volatility: it asks whether price swings are bigger on up bars or on down bars.
 
-**Typical Use Case:** Confirming trend direction and identifying divergences. RVI above 50 with rising price confirms bullish momentum, while RVI below 50 with falling price confirms bearish momentum. Divergences between RVI and price can signal potential reversals.
+Above 50, volatility sides with the buyers; below 50, with the sellers. Best used to confirm another signal, with 80 and 20 as the outer bands.
 
----
+| Setting | Default |
+| ------- | ------- |
+| Length  | 10      |
+| MA      | SMA 14  |
 
-### Chaikin Volatility
+Based on TradingView's built-in Relative Volatility Index indicator.
 
-**Purpose:** Quantifies the rate of change of volatility based on the trading range.
+## Volatility Ratio
 
-**Core Logic:** Calculates the exponential moving average of the high-low spread, then measures the rate of change of this EMA over a specified period. Rising values indicate expanding volatility, while falling values suggest contracting volatility.
+![Volatility Ratio](images/volatility-ratio.png)
 
-**Key Parameters:**
-- Length: 10 (EMA period for high-low spread)
-- ROC Length: 12 (rate of change lookback period)
+Compares the current bar's true range with the range of the last 14 bars.
 
-![Chaikin Volatility](images/Chaikin-Volatility.png)
+Readings above the breakout level are shaded on the chart: bars that are unusually wide for this market, often where a breakout begins.
 
-**Typical Use Case:** Anticipating breakouts and trend changes. Increasing Chaikin Volatility often precedes significant price movements, while decreasing volatility suggests consolidation. Spikes above zero can signal the start of trending moves.
+| Setting        | Default |
+| -------------- | ------- |
+| Length         | 14      |
+| Breakout level | 0.5     |
 
----
+## How to use
 
-### Volatility Ratio
-
-**Purpose:** Compares current true range to recent price range to identify volatility expansion or contraction.
-
-**Core Logic:** Divides the current true range by the difference between the highest high and lowest low over a lookback period (including a historical close). Values above the breakout level indicate elevated volatility relative to recent range.
-
-**Key Parameters:**
-- Length: 14 (lookback period for high/low range)
-- Breakout Level: 0.5 (threshold for volatility expansion)
-
-![Volatility Ratio](images/Volatility-Ratio.png)
-
-**Typical Use Case:** Detecting volatility breakouts from consolidation periods. Values exceeding the breakout level suggest the market is breaking out of its recent range, potentially signaling the start of a new trend or increased price movement.
-
----
-
-## How to Use
-
-1. Open TradingView and navigate to the Pine Editor
-2. Copy the desired indicator code from the `indicators/` folder in this repository
-3. Paste the code into the Pine Editor
-4. Click "Add to Chart" to apply the indicator
-5. Adjust parameters in the indicator settings panel as needed
-6. Combine multiple indicators for confirmation of trading signals
+1. Open the indicator's `.pine` file in `indicators/` and copy the code.
+2. In TradingView, open the Pine Editor, paste the code and save it.
+3. Click **Add to chart**, then change the defaults in the indicator's settings.
 
 ## Disclaimer
 
-These indicators are provided for educational and informational purposes only. They are technical analysis tools and should not be used as the sole basis for trading decisions. Past performance does not guarantee future results. Always conduct thorough analysis and consider your risk tolerance before trading.
+For learning and research. Indicators describe what price has done, not what it will do. Nothing here is financial advice.
+
+## License
+
+[MIT](LICENSE). Indicators based on someone else's work keep their original author's terms.
